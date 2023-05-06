@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const helmet = require("helmet");
-const connect = require("./models/db.connection");
+const connectToMongodb = require("./models/db.connection");
 const { getConfig } = require("./util/config");
 
 const errorMiddleware = require("./middlewares/error");
@@ -12,7 +12,7 @@ if(!getConfig("JWT_PRIVATE_KEY")) {
     process.exit(1);
 }
 
-connect();
+connectToMongodb();
 
 app.use(express.json());
 app.use(helmet());

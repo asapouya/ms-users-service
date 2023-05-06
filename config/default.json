@@ -1,3 +1,4 @@
 {
-    "JWT_PRIVATE_KEY": ""
+    "JWT_PRIVATE_KEY": "",
+    "rabbitMQ_url": "amqp://localhost"
 }
