@@ -1,9 +1,8 @@
 class UsersService {
 
-    constructor({MongoRepo, BrokerRepo, Hash, lodash, tryCatch}) {
+    constructor({MongoRepo, BrokerRepo, Hash, lodash}) {
         this.mongo = MongoRepo;
         this.rabbitMQ = BrokerRepo;
-        this.tryCatch = tryCatch;
         this.hash = Hash;
         this._ = lodash;
     }
@@ -58,7 +57,17 @@ class UsersService {
             }
         }), "");
         res.send(user);
-    })
+    }) 
+
+    tryCatch(routeHandler) {
+        return async (req, res, next) => {
+            try {
+                await routeHandler(req, res)
+            } catch (error) {
+                next(error);
+            }
+        }
+    }
 }
 
 module.exports = UsersService;

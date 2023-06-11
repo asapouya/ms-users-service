@@ -1,12 +1,11 @@
 const express = require("express");
 const app = express();
-const helmet = require("helmet");
-const { get } = require("./util/config");
 const { diSetup } = require("./di.setup")
+const helmet = require("helmet");
+const Config = require("./util/config");
 const errorMiddleware = require("./middlewares/error");
-const usersRoute = require("./routes/users.routes");
 
-if(!get("JWT_PRIVATE_KEY")) {
+if(!new Config().get("JWT_PRIVATE_KEY")) {
     console.error("FATAL ERROR: JWT_PRIVATE_KEY NOT FOUND!");
     process.exit(1);
 }
@@ -14,7 +13,7 @@ if(!get("JWT_PRIVATE_KEY")) {
 diSetup().then(() => {
     app.use(express.json());
     app.use(helmet());
-    app.use("/users", usersRoute);
+    app.use("/users", require("./routes/users.routes"));
     app.use(errorMiddleware);
 })
 

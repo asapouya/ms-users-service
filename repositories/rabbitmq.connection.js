@@ -1,6 +1,6 @@
 class RabbitMQConnection {
 
-    constructor({Config}) {
+    constructor(Config) {
         const instance = this.constructor.instance
         if(instance) return instance;
         this.config = Config;

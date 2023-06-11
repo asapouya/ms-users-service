@@ -1,6 +1,6 @@
+const { container } = require("../di.setup");
 const express = require("express");
 const router = express.Router();
-const { container } = require("../di.setup");
 const postValidUser = require("../middlewares/validation/post_user");
 
 const usersController = container.resolve("UsersController");

@@ -1,6 +1,7 @@
 const config = require("config");
 
 class Config {
+    
     get(name){
         return config.get(name);
     }

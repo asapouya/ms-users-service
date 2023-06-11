@@ -1,4 +1,4 @@
-const {createContainer, asClass, InjectionMode, asValue} = require("awilix");
+const {createContainer, asClass, InjectionMode, asValue, asFunction} = require("awilix");
 const BrokerRepo = require("./repositories/rabbittmq.repo");
 const UsersService = require("./services/users.service");
 const UsersController = require("./controllers/users.controllers");
@@ -9,7 +9,6 @@ const Users = require("./models/users.model");
 const Hash = require("./util/hash");
 const _ = require("lodash");
 const Config = require("./util/config");
-const tryCatch = require("./util/try_catch")
 
 const container = createContainer({
     injectionMode: InjectionMode.PROXY
@@ -17,19 +16,18 @@ const container = createContainer({
 
 async function diSetup() {
 
-    const rabbitMQConnection = new RabbitMQConnection();
-    const mongoConnection = new MongoConnection();
+    const rabbitMQConnection = new RabbitMQConnection(new Config());
+    const mongoConnection = new MongoConnection(new Config());
     await mongoConnection.connect();
     await rabbitMQConnection.connect();
 
     container.register({
         lodash: asValue(_),
-        tryCatch: asValue(tryCatch),
         usersModel: asValue(Users),
         rabbitMQConnection: asValue(rabbitMQConnection.getConnection),
-        Hash: asClass(Hash),
         Config: asClass(Config),
-        UsersController: asClass(UsersController),
+        Hash: asClass(Hash),
+        UsersController: asClass(UsersController).scoped(),
         MongoRepo: asClass(MongoRepo),
         BrokerRepo: asClass(BrokerRepo),
         UsersService: asClass(UsersService),
