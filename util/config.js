@@ -1,7 +1,9 @@
 const config = require("config");
 
-module.exports = {
-    getConfig(name){
+class Config {
+    get(name){
         return config.get(name);
     }
 }
+
+module.exports = Config;
