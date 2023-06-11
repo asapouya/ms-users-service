@@ -9,7 +9,7 @@ const Users = require("./models/users.model");
 const Hash = require("./util/hash");
 const _ = require("lodash");
 const Config = require("./util/config");
-
+const tryCatch = require("./util/try_catch")
 
 const container = createContainer({
     injectionMode: InjectionMode.PROXY
@@ -24,6 +24,7 @@ async function diSetup() {
 
     container.register({
         lodash: asValue(_),
+        tryCatch: asValue(tryCatch),
         usersModel: asValue(Users),
         rabbitMQConnection: asValue(rabbitMQConnection.getConnection),
         Hash: asClass(Hash),

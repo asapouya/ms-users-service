@@ -1,35 +1,34 @@
-const tryCatch = require("../util/try_catch");
-
 class UsersService {
 
-    constructor({MongoRepo, BrokerRepo, Hash, lodash}) {
+    constructor({MongoRepo, BrokerRepo, Hash, lodash, tryCatch}) {
         this.mongo = MongoRepo;
         this.rabbitMQ = BrokerRepo;
+        this.tryCatch = tryCatch;
         this.hash = Hash;
         this._ = lodash;
     }
 
-    get_user_by_Id = tryCatch(async (req, res) => {
+    get_user_by_Id = this.tryCatch(async (req, res) => {
         const userId = req.params.userId;
         const user = await this.mongo.findById(userId, {password: 0, booksPurchased: 0, __v: 0});
         res.send(user);
     })
 
-    get_user = tryCatch(async (req, res) => {
+    get_user = this.tryCatch(async (req, res) => {
         if(!req.query.email) return res.send("");
         const user = await this.mongo.findOne(req.query);
         console.log(user);
         res.send(user);
     })
 
-    post_user = tryCatch(async (req, res) => {
+    post_user = this.tryCatch(async (req, res) => {
         const user = this.mongo.userFactory(this._.pick(req.body, ["username", "email", "password"]));
         user.password = await this.hash.hash(user.password);
         await user.save();
         res.status(201).send(this._.pick(req.body, ["username", "email"]));
     })
     
-    delete_user = tryCatch(async (req, res) => {
+    delete_user = this.tryCatch(async (req, res) => {
         const userHeader = JSON.parse(req.header("x-user"));            
         const userId = userHeader._id;
         
