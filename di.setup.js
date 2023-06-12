@@ -1,4 +1,4 @@
-const {createContainer, asClass, InjectionMode, asValue, asFunction} = require("awilix");
+const {createContainer, asClass, InjectionMode, asValue} = require("awilix");
 const BrokerRepo = require("./repositories/rabbittmq.repo");
 const UsersService = require("./services/users.service");
 const UsersController = require("./controllers/users.controllers");
@@ -27,10 +27,10 @@ async function diSetup() {
         rabbitMQConnection: asValue(rabbitMQConnection.getConnection),
         Config: asClass(Config),
         Hash: asClass(Hash),
+        UsersService: asClass(UsersService),
         UsersController: asClass(UsersController).scoped(),
         MongoRepo: asClass(MongoRepo),
         BrokerRepo: asClass(BrokerRepo),
-        UsersService: asClass(UsersService),
     })
 }
 

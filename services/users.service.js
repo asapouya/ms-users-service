@@ -7,27 +7,27 @@ class UsersService {
         this._ = lodash;
     }
 
-    get_user_by_Id = this.tryCatch(async (req, res) => {
+    get_user_by_Id = async (req, res) => {
         const userId = req.params.userId;
         const user = await this.mongo.findById(userId, {password: 0, booksPurchased: 0, __v: 0});
         res.send(user);
-    })
+    }
 
-    get_user = this.tryCatch(async (req, res) => {
+    get_user = async (req, res) => {
         if(!req.query.email) return res.send("");
         const user = await this.mongo.findOne(req.query);
         console.log(user);
         res.send(user);
-    })
+    }
 
-    post_user = this.tryCatch(async (req, res) => {
+    post_user = async (req, res) => {
         const user = this.mongo.userFactory(this._.pick(req.body, ["username", "email", "password"]));
         user.password = await this.hash.hash(user.password);
         await user.save();
         res.status(201).send(this._.pick(req.body, ["username", "email"]));
-    })
+    }
     
-    delete_user = this.tryCatch(async (req, res) => {
+    delete_user = async (req, res) => {
         const userHeader = JSON.parse(req.header("x-user"));            
         const userId = userHeader._id;
         
@@ -57,16 +57,6 @@ class UsersService {
             }
         }), "");
         res.send(user);
-    }) 
-
-    tryCatch(routeHandler) {
-        return async (req, res, next) => {
-            try {
-                await routeHandler(req, res)
-            } catch (error) {
-                next(error);
-            }
-        }
     }
 }
 
