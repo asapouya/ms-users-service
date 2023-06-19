@@ -1,5 +1,0 @@
-{
-    "JWT_PRIVATE_KEY": "",
-    "rabbitmq_url": "amqp://localhost",
-    "mongo_url": "mongodb+srv://asapouya:Gozgoz1234@storiescluster.euhfaq8.mongodb.net/Users?retryWrites=true&w=majority"
-}
