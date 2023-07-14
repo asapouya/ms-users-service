@@ -58,6 +58,35 @@ class UsersService {
         }), "");
         res.send(user);
     }
+
+    handle_order_finalization = async () => {
+        //listen to queue for message
+        try {
+            await this.rabbitMQ.createChannel();
+            this.rabbitMQ.errorEvent(err => {
+                console.log(err);
+            })
+            await this.rabbitMQ.listenForMessage("users.finalize.order.queue", async (msg) => {
+                //parse message
+                const content = JSON.parse(msg.content.toString());
+                const booksToBeAdded = content.data.books;
+                const userId = content.data.userId;
+                //add books to user obj in db 
+                try {
+                    const user = await this.mongo.updateOne({_id: userId}, {
+                        $push: {booksPurchased: booksToBeAdded}
+                    });
+                    console.log(user);                   
+                    this.rabbitMQ.ack(msg);
+                } catch (err) {
+                    console.log(err);
+                    this.rabbitMQ.noAck(msg);
+                }
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
 }
 
 module.exports = UsersService;

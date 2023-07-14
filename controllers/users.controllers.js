@@ -1,6 +1,11 @@
 class UsersController {
     constructor({UsersService}) {
         this.usersService = UsersService;
+        this.handle_order_finalization();
+    }
+
+    handle_order_finalization = () => {
+        this.usersService.handle_order_finalization()
     }
 
     get_user_by_Id = this.tryCatch(async (req, res) => {  

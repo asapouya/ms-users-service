@@ -23,7 +23,7 @@ const userSchema = new Schema({
         type: Boolean
     }, 
     booksPurchased: {
-        type: [Schema.Types.ObjectId]   
+        type: [String]   
     }
 })
 
